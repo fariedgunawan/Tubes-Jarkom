@@ -1,17 +1,14 @@
 import socket
-import threading
 import os
-
 
 def send_response(client_socket, response):
     client_socket.sendall(response)
     client_socket.close()
 
-def handle_client(client_socket, client_address):
+def handle_client(client_socket):
     request = client_socket.recv(1024).decode()
-
     filename = request.split()[1]
-    filename = filename[1:] 
+    filename = filename[1:]
 
     if os.path.exists(filename):
         with open(filename, 'rb') as file:
@@ -38,12 +35,11 @@ def start_server(host, port):
     while True:
         client_socket, client_address = server_socket.accept()
         print(f"[*] Accepted connection from {client_address[0]}:{client_address[1]}")
-
-        client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
-        client_thread.start()
+        
+        handle_client(client_socket)
 
 if __name__ == "__main__":
-    HOST = '127.0.0.1'  
-    PORT = 6789  
+    HOST = '127.0.0.1'
+    PORT = 6789
 
     start_server(HOST, PORT)

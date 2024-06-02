@@ -3,19 +3,15 @@ import sys
 
 def send_request(server_host, server_port, filename):
     try:
-        # Buat koneksi TCP ke server
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect((server_host, server_port))
 
-        # Kirim request HTTP
         request = f"GET /{filename} HTTP/1.1\r\nHost: {server_host}\r\n\r\n"
         client_socket.sendall(request.encode())
 
-        # Terima dan tampilkan respons dari server
         response = client_socket.recv(4096).decode()
         print(response)
-
-        # Tutup koneksi
+        
         client_socket.close()
 
     except Exception as e:
